@@ -1,6 +1,6 @@
 """MLP - machine-learning-production
 Usage:
-    mlp-cli train <dataset-file> [--vocab-size=<vocab-size>]
+    mlp-cli train [--vocab-size=<vocab-size>]
     mlp-cli ask <question>
     mlp-cli (-h | --help)
 Arguments:
@@ -14,9 +14,9 @@ from mlp.dataset import Dataset
 from mlp.model import Model
 
 
-def train_model(data_file, vocab_size):
-    print(f"Training model from {data_file}")
-    data = Dataset(data_file)
+def train_model(vocab_size):
+    print("Training model")
+    data = Dataset()
     data.load_data()
     data.get_target("sentiment")
     X_train, X_test, y_train, y_test = data.split_data(0.2)
@@ -38,8 +38,7 @@ def main():
     arguments = docopt(__doc__)
 
     if arguments["train"]:
-        train_model(arguments['<dataset-file>'],
-                    int(arguments['--vocab-size']))
+        train_model(int(arguments['--vocab-size']))
 
     elif arguments["ask"]:
         ask_model(arguments["<question>"])
