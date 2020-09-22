@@ -1,19 +1,26 @@
 import pandas as pd
+import glob
 
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 
 
 class Dataset:
-    def __init__(self, data_file):
-        self.data_file = Path(data_file)
 
     def load_data(self):
-        self.data = pd.read_csv(self.data_file,
-                                delimiter='\t',
-                                names=['sentence', 'sentiment'],
-                                header=None)
-        return self.data
+        data_paths = glob.glob("data/*.txt")
+
+        self.data = pd.DataFrame()
+
+        for data_file in data_paths:
+
+            df = pd.read_csv(data_file,
+                             delimiter='\t',
+                             names=['sentence', 'sentiment'],
+                             header=None)
+            self.data = self.data.append(df)
+
+        return self.data.reset_index(drop=True)
 
     def get_target(self, target_name):
         self.X = self.data.drop(target_name, axis=1).values.ravel()
